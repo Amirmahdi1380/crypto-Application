@@ -1,4 +1,4 @@
-import 'package:crypto_application/screen/data/model/user.dart';
+import 'package:crypto_application/screen/data/model/Crypto.dart';
 import 'package:crypto_application/screen/user_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<User>? user;
+  List<Crypto>? crypto;
   @override
   void initState() {
     super.initState();
@@ -36,17 +36,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getDate() async {
-    var response =
-        await Dio().get('https://jsonplaceholder.typicode.com/users');
-    List<User> userList = response.data
-        .map<User>((jsonMapObject) => User.fromMapJson(jsonMapObject))
+    var response = await Dio().get('https://api.coincap.io/v2/assets');
+    List<Crypto> cryptoList = response.data['data']
+        .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
         .toList();
     //var user = User.fromMapJson(jsonMapObject);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserScreen(
-          user: userList,
+        builder: (context) => CryptoList(
+          cryptoList: cryptoList,
         ),
       ),
     );

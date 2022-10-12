@@ -1,4 +1,4 @@
-import 'package:crypto_application/screen/home_screen.dart';
+import 'package:crypto_application/screen/coin_list_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
