@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(Main_Application());
 }
+
 class Main_Application extends StatelessWidget {
   const Main_Application({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'morabaee'),
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );

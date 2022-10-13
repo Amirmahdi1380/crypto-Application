@@ -26,8 +26,27 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image(
+              image: AssetImage('assets/images/money.png'),
+              height: 450.0,
+              width: 300.0,
+            ),
+            Text(
+              'لطفا صبر کنید',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Center(
-              child: SpinKitFoldingCube(color: Colors.white),
+              child: SpinKitSpinningLines(
+                color: Colors.white,
+                size: 80,
+              ),
             ),
           ],
         ),
@@ -35,7 +54,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void getDate() async {
+  Future<void> getDate() async {
     var response = await Dio().get('https://api.coincap.io/v2/assets');
     List<Crypto> cryptoList = response.data['data']
         .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
