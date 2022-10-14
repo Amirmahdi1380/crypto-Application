@@ -1,9 +1,11 @@
 import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:crypto_application/screen/data/constants/constant.dart';
 import 'package:crypto_application/screen/data/model/Crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CryptoList extends StatefulWidget {
   CryptoList({Key? key, this.cryptoList}) : super(key: key);
@@ -14,6 +16,7 @@ class CryptoList extends StatefulWidget {
 
 class _CryptoListState extends State<CryptoList> {
   List<Crypto>? cryptoList;
+  bool searching = false;
   @override
   void initState() {
     super.initState();
@@ -36,29 +39,89 @@ class _CryptoListState extends State<CryptoList> {
       backgroundColor: blackColor,
       body: SafeArea(
         child: Center(
-          child: RefreshIndicator(
-            //key: _refreshIndicatorKey,
-            color: Colors.white,
-            backgroundColor: greenColor,
-            strokeWidth: 5.0,
-            onRefresh: () async {
-              List<Crypto> freshData = await _getRefresh();
-              setState(() {
-                cryptoList = freshData;
-              });
-              //return Future<void>.delayed(const Duration(seconds: 3));
-            },
-            child: ListView.builder(
-              itemCount: cryptoList!.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Center(
-                    child: _getItemList(cryptoList![index]),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextField(
+                    onChanged: (value) {
+                      _getFillterList(value);
+                      //print(value);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'اسم رمزارز خود را وارد کنید',
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          style: BorderStyle.none,
+                          width: 0,
+                          // color: Colors.white,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: greenColor,
+                    ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: searching,
+                    child: Text(
+                      '...در حال آپدیت',
+                      style: TextStyle(
+                        color: greenColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Visibility(
+                    visible: searching,
+                    child: SpinKitSquareCircle(
+                      color: greenColor,
+                      size: 30,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  //key: _refreshIndicatorKey,
+                  color: Colors.white,
+                  backgroundColor: greenColor,
+                  strokeWidth: 5.0,
+                  onRefresh: () async {
+                    List<Crypto> freshData = await _getRefresh();
+                    setState(() {
+                      cryptoList = freshData;
+                    });
+                    //return Future<void>.delayed(const Duration(seconds: 3));
+                  },
+                  child: ListView.builder(
+                    itemCount: cryptoList!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Center(
+                          child: _getItemList(cryptoList![index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -149,5 +212,26 @@ class _CryptoListState extends State<CryptoList> {
 
   Color _getColorPrice(double changePercent24hr) {
     return changePercent24hr <= 0 ? redColor : greenColor;
+  }
+
+  Future<void> _getFillterList(String KeyboardType) async {
+    List<Crypto> cryptoResultList = [];
+    if (KeyboardType.isEmpty) {
+      setState(() {
+        searching = true;
+      });
+      var result = await _getRefresh();
+      setState(() {
+        cryptoList = result;
+        searching = false;
+      });
+    }
+
+    cryptoResultList = cryptoList!.where((element) {
+      return element.name.toLowerCase().contains(KeyboardType);
+    }).toList();
+    setState(() {
+      cryptoList = cryptoResultList;
+    });
   }
 }
