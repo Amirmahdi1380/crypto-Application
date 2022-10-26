@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:ui';
-
 import 'package:crypto_application/screen/data/constants/constant.dart';
 import 'package:crypto_application/screen/data/model/Crypto.dart';
 import 'package:flutter/material.dart';
@@ -226,7 +223,6 @@ class _CryptoListState extends State<CryptoList> {
         searching = false;
       });
     }
-
     cryptoResultList = cryptoList!.where((element) {
       return element.name.toLowerCase().contains(KeyboardType);
     }).toList();

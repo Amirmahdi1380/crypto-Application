@@ -4,6 +4,11 @@ A new Flutter project.
 
 ## Getting Started
 
+
+<img src="assets/images/loading_screen.png" width="150" height="300">
+loading screen
+<img src="assets/images/home_screen.png" width="150" height="300">
+home screen 
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
